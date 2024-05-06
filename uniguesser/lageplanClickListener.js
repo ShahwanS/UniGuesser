@@ -38,7 +38,7 @@ window.addEventListener('load', function() {
         dot.style.position = 'absolute';
         dot.style.left = (x - 2.5) + 'px'; // subtract half the width of the dot
         console.log("X: " + dot.style.left);
-        dot.style.top = (y + 55) + 'px'; // subtract half the height of the dot
+        dot.style.top = (y + 57.5) + 'px'; // subtract half the height of the dot
         console.log("Y: " + dot.style.top);
         dot.style.width = '5px';
         dot.style.height = '5px';
