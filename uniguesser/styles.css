@@ -1,0 +1,5 @@
+.scaled-image {
+    max-height: 80vh; /* Bildhöhe auf die Grenze des Browsers beschränken */
+    width: auto; /* Breite automatisch an die Höhe anpassen */
+    object-fit: contain; /* Behält das Seitenverhältnis des Bildes bei, während es skaliert wird */
+}
