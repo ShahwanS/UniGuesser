@@ -25,7 +25,6 @@ window.addEventListener('load', function() {
         localStorage.setItem('clickCoordinates', JSON.stringify(clickCoordinates));
 
         // Koordinaten in der Konsole ausgeben (zum Testen)
-        console.log('Klick-Koordinaten: ', clickCoordinates);
 
         // Remove the existing dot if it exists
         var existingDot = document.getElementById('click-dot');
@@ -38,7 +37,9 @@ window.addEventListener('load', function() {
         dot.id = 'click-dot';
         dot.style.position = 'absolute';
         dot.style.left = (x - 2.5) + 'px'; // subtract half the width of the dot
+        console.log("X: " + dot.style.left);
         dot.style.top = (y + 55) + 'px'; // subtract half the height of the dot
+        console.log("Y: " + dot.style.top);
         dot.style.width = '5px';
         dot.style.height = '5px';
         dot.style.backgroundColor = 'red';
