@@ -90,4 +90,4 @@ import Footer from "../../components/utils/Footer";
 ```
 
 ## Conclusion
-Start by exploring the given examples and modify them according to your project needs. Watching some introductory YouTube videos on React and Next.js can be very helpful. Remember, practice is key when learning new technologies!
+Start by playing around and getting a feeling, learning react is very important followed by tailwind and then nextjs, watch some youtube videos and ask me anytime if you have questions 
