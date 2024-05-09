@@ -6,7 +6,6 @@ export default function Registration() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showNotification, setShowNotification] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -29,7 +28,6 @@ export default function Registration() {
     if (!response.ok) {
       if (response.status === 500) {
         setError("username already exists");
-        setShowNotification(true);
         return;
       }
     }
