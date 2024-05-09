@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import Notification from "./Notification";
 export default function Registration() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
