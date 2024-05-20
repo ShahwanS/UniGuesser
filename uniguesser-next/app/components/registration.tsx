@@ -8,31 +8,35 @@ export default function Registration() {
   const [error, setError] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault();
     setLoading(true);
     setError("");
 
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: event.currentTarget.username.value,
-      }),
-    });
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: event.currentTarget.username.value,
+        }),
+      });
 
-    const result = await response.text();
-    setLoading(false);
+      const result = await response.json();
 
-    if (!response.ok) {
-      if (response.status === 500) {
-        setError("username already exists");
-        return;
+      if (!response.ok) {
+        setError(result.error || "Failed to register");
+      } else {
+        console.log(result[0].id);
+        router.push(`/game/${result[0].id}`);
       }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      setError("Network error, please try again later.");
+    } finally {
+      setLoading(false);
     }
-
-    router.push("/game");
   };
 
   return (
