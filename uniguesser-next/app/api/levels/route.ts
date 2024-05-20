@@ -1,16 +1,16 @@
 
 
-import { NextRequest, NextResponse } from 'next/server';
+import {NextResponse } from 'next/server';
 import { createClient } from "@/app/utils/client";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     const client = createClient();
     try {
-        const { data, error } = await client.from("random_image").select("*");
+        const { data, error } = await client.from("images").select("*");
 
         if (error) {
-            console.error('Error fetching image:', error);
-            return new NextResponse(JSON.stringify({error: 'Error fetching image', details: error.message}), {
+            console.error('Error fetching images:', error);
+            return new NextResponse(JSON.stringify({ error: 'Error fetching images', details: error.message }), {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
                 }
             });
         }
-
         if (!data) {
             return new NextResponse(JSON.stringify({error: 'No image found'}), {
                 status: 404,
@@ -28,12 +27,8 @@ export async function GET(request: NextRequest) {
                 }
             });
         }
-        //return a random index  1 to 16
-        const randomIndex = Math.floor(Math.random() * 2) + 1;
-        console.log(randomIndex)
-        const randomObject = data[randomIndex];
-        console.log(randomObject)
-        return new NextResponse(JSON.stringify(randomObject), {
+       
+        return new NextResponse(JSON.stringify({ images: data }), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json',
@@ -42,7 +37,7 @@ export async function GET(request: NextRequest) {
         });
     } catch (exception) {
         console.error('Exception in GET API:', exception);
-        return new NextResponse(JSON.stringify({error: 'Server error', details: (exception as Error).message}), {
+        return new NextResponse(JSON.stringify({ error: 'Server error', details: (exception as Error).message }), {
             status: 500,
             headers: {
                 'Content-Type': 'application/json',
