@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
-import { GlobalCoordinatesProvider } from "./context/GlobalCoordinatesContext";
+import { LevelProvider } from "./context/LevelContext";
+import { PlayerProvider } from "./context/PlayerContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GlobalCoordinatesProvider>
-          <main>{children}</main>
-          <Script src="https://cdn.pannellum.org/2.5/pannellum.js"></Script>
-        </GlobalCoordinatesProvider>
+        <LevelProvider>
+          <PlayerProvider>
+            <main>{children}</main>
+            <Script src="https://cdn.pannellum.org/2.5/pannellum.js"></Script>
+          </PlayerProvider>
+        </LevelProvider>
       </body>
     </html>
   );

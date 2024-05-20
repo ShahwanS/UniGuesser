@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import map from "@/public/Lageplan03.png";
-import { useGlobalCoordinates } from "../context/GlobalCoordinatesContext";
+import { useLevel } from "../context/LevelContext";
+import { usePlayer } from "../context/PlayerContext";
+
 // Define types for the coordinates and marker position
 interface Coordinate {
   x: number;
@@ -16,16 +18,24 @@ interface MarkerPosition extends Coordinate {
 
 // The Map component handles displaying an interactive map and marker placement
 const Map: React.FC = () => {
-  // State for the marker position and visibility
   const [markerPosition, setMarkerPosition] = useState<MarkerPosition>({
     x: 0,
     y: 0,
     visible: false,
   });
-  const { coordinates, setCoordinates } = useGlobalCoordinates();
   const [firstClick, setFirstClick] = useState(false);
+  const {
+    currentLevel,
+    images,
+    setDistance,
+    setLevelCompleted,
+    setLevelScore,
+  } = useLevel();
+  const { setScore } = usePlayer();
+
+  // Function to update the coordinates in the global context
   function updateCoordinates(newX: number, newY: number) {
-    setCoordinates({ x: newX, y: newY });
+    setMarkerPosition({ x: newX, y: newY, visible: true });
   }
 
   // Function to calculate consistent coordinates across different screen sizes
@@ -34,11 +44,11 @@ const Map: React.FC = () => {
     y: number,
     bounds: DOMRect
   ) => {
-    // Image original size
+    // Map's original size
     const originalWidth = 1920;
     const originalHeight = 1080;
 
-    // Calculate consistent coordinates based on the image's original dimensions
+    // Calculate consistent coordinates based on the map's original dimensions
     const consistentX = (x / bounds.width) * originalWidth;
     const consistentY = (y / bounds.height) * originalHeight;
 
@@ -46,6 +56,12 @@ const Map: React.FC = () => {
   };
 
   // Handler for map clicks to set the marker position
+  {
+    /* Get the bounding box of the map (bounds).
+Calculate the clicked coordinates relative to the bounding box.
+Convert these coordinates to consistent coordinates using calculateConsistentCoordinates.
+Update the marker position state. */
+  }
   const handleMapClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -62,15 +78,77 @@ const Map: React.FC = () => {
     setMarkerPosition({ x: consistentX, y: consistentY, visible: true });
     updateCoordinates(consistentX, consistentY);
     setFirstClick(true);
+  };
 
-    console.log(`Clicked coordinates: X: ${consistentX}, Y: ${consistentY}`);
+  const currentImage = images[currentLevel];
+
+  const validateGuess = () => {
+    if (!currentImage) return;
+    console.log(
+      "image coordinates :" + currentImage.x_coord + " " + currentImage.y_coord
+    );
+    console.log(
+      "user coordinates :" + markerPosition.x + " " + markerPosition.y
+    );
+    const { x_coord, y_coord } = currentImage;
+    const distance = calculateDistance(
+      markerPosition.x,
+      markerPosition.y,
+      x_coord,
+      y_coord
+    );
+
+    setDistance(distance);
+
+    // Calculate score based on distance
+    const score = calculateScore(distance);
+    console.log(score);
+    setScore((previousScore) => previousScore + score);
+    setLevelScore(score);
+    setLevelCompleted(true);
+    setFirstClick(false);
+  };
+
+  {
+    /* Calculate the difference in x (dx) and y (dy) coordinates.
+Compute the Euclidean distance in pixels.
+Convert the distance from pixels to meters using a pixelToMeterRatio*/
+  }
+  const calculateDistance = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ): number => {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const distanceInPixels = Math.sqrt(dx * dx + dy * dy);
+
+    // Adjust the pixel to meter ratio based on map scaling
+    const pixelToMeterRatio = 1 / 10;
+    return distanceInPixels * pixelToMeterRatio;
+  };
+
+  const calculateScore = (distance: number): number => {
+    const maxScore = 100;
+    const fullScoreDistance = 1;
+    const score =
+      distance <= fullScoreDistance
+        ? maxScore
+        : Math.floor(
+            Math.max(0, maxScore - (distance - fullScoreDistance) * 10)
+          );
+    return score;
   };
 
   return (
     <div className="relative w-full h-full">
       {/* Show the "Guess!" button only after the first marker placement */}
       {firstClick && (
-        <button className="absolute bottom-0 w-full bg-green-500 text-white px-4 py-2 rounded z-30">
+        <button
+          onClick={validateGuess}
+          className="absolute bottom-0 w-full bg-green-500 text-white px-4 py-2 rounded z-30"
+        >
           Guess!
         </button>
       )}
@@ -90,8 +168,8 @@ const Map: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            left: `${((markerPosition.x - 20) / 1920) * 100}%`, // Offset slightly for centering
-            top: `${((markerPosition.y - 10) / 1080) * 100}%`,
+            left: `${((markerPosition.x - 5) / 1920) * 100}%`, // Offset slightly for centering
+            top: `${((markerPosition.y - 5) / 1080) * 100}%`,
             width: "10px",
             height: "10px",
             backgroundColor: "red",
