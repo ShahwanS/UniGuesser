@@ -47,6 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+      <script defer src="https://umami.socialcodelens.com/script.js" data-website-id="a99d6a3d-ff9a-4987-820b-b02c61e940cb"></script>
         <meta property="og:title" content="UniGuesser" />
         <meta
           property="og:description"
