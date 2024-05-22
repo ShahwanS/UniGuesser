@@ -48,5 +48,4 @@ const Leaderboard: React.FC = async () => {
     </div>
   );
 };
-
 export default Leaderboard;
