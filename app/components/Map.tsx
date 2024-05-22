@@ -147,7 +147,7 @@ Convert the distance from pixels to meters using a pixelToMeterRatio*/
       {firstClick && (
         <button
           onClick={validateGuess}
-          className="absolute bottom-0 w-full bg-green-500 text-white px-4 py-2 rounded z-30"
+          className="absolute bottom-0 w-full bg-blue-500 text-white px-4 py-2 rounded z-30"
         >
           Guess!
         </button>
@@ -158,8 +158,7 @@ Convert the distance from pixels to meters using a pixelToMeterRatio*/
         src={map}
         alt="Campus Map"
         layout="fill"
-        objectFit="cover"
-        className="select-none cursor-pointer object-contain h-full w-full pb-10"
+        className="select-none cursor-pointer  h-full w-full pb-10 object-cover"
         onClick={handleMapClick}
       />
 

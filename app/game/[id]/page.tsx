@@ -24,7 +24,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { score, username } = usePlayer();
-  console.log(username);
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -94,6 +94,15 @@ const GamePage = ({ params }: { params: { id: string } }) => {
     window.location.href = "/";
   };
 
+  // If the username is not set, redirect to homepage
+  if (!username) {
+    window.location.href = "/";
+  }
+
+  const toggleMapVisibility = () => {
+    setIsMapVisible(!isMapVisible);
+  };
+
   return (
     <div className="relative w-full h-screen flex justify-center items-center">
       <div className="absolute top-0 right-0 z-10 p-10 space-y-4">
@@ -126,9 +135,21 @@ const GamePage = ({ params }: { params: { id: string } }) => {
         />
       )}
       {/* Map component for making guesses */}
-      <div className="absolute bottom-4 right-4 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out">
+      {/* Map component for making guesses, only visible on non-mobile devices or when toggled */}
+      <div
+        className={`absolute bottom-20 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
+          isMapVisible ? "block" : "hidden"
+        } sm:block`}
+      >
         <Map />
       </div>
+      {/* Toggle button for mobile devices */}
+      <button
+        onClick={toggleMapVisibility}
+        className=" w-full fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-3 rounded-md z-30 sm:hidden text-lg"
+      >
+        {isMapVisible ? "Hide Map" : "Show Map"}
+      </button>
 
       {levelCompleted && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
