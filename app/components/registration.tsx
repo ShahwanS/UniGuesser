@@ -45,11 +45,10 @@ export default function Registration() {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      {/* Username input field */}
       <div>
         <label
           htmlFor="username"
-          className="block text-gray-700 text-lg font-medium text-center"
+          className="block text-gray-700 text-lg font-medium text-center lg:text-left"
         >
           Enter Username:
         </label>
@@ -61,23 +60,20 @@ export default function Registration() {
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md text-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
         />
       </div>
-      {/* Loading message */}
       {loading && (
-        <div className="text-center">
+        <div className="text-center lg:text-left">
           <p className="text-lg text-gray-800">Loading...</p>
         </div>
       )}
-      {/* Error message */}
       {error && (
-        <div className="text-center text-red-600">
+        <div className="text-center text-red-600 lg:text-left">
           <p className="text-lg">{error}</p>
         </div>
       )}
-      {/* Submit button */}
       <button
         type="submit"
         className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md text-white font-semibold text-lg transition-colors"
-        disabled={loading} // Disable button while loading
+        disabled={loading}
       >
         Start Guessing
       </button>
