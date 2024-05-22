@@ -16,8 +16,22 @@ export const metadata: Metadata = {
       "Test your knowledge by guessing university campuses from around the world. Explore photos, clues, and challenge yourself in this fun, educational game!",
     type: "website",
     url: "https://www.uniguesser.com",
+    images: [
+      {
+        url: "https://kwphjqoddaujvahppwmj.supabase.co/storage/v1/object/public/images/Screenshot%202024-05-22%20124412.png",
+        width: 1200,
+        height: 630,
+        alt: "UniGuesser",
+      },
+    ],
   },
   twitter: {
+    images: [
+      {
+        url: "https://kwphjqoddaujvahppwmj.supabase.co/storage/v1/object/public/images/Screenshot%202024-05-22%20124412.png",
+        alt: "UniGuesser",
+      },
+    ],
     card: "summary_large_image",
     title: "UniGuesser",
     description:
