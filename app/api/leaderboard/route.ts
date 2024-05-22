@@ -6,11 +6,11 @@ import { createClient } from "@/app/utils/client";
 export async function GET() {
     const client = createClient();
     try {
-        const { data, error } = await client.from("images").select("*").order("id", { ascending: true });
+        const { data, error } = await client.from("users").select("*").order("score", { ascending: true }).limit(5);
 
         if (error) {
-            console.error('Error fetching images:', error);
-            return new NextResponse(JSON.stringify({ error: 'Error fetching images', details: error.message }), {
+            console.error('Error fetching scores:', error);
+            return new NextResponse(JSON.stringify({ error: 'Error fetching scores', details: error.message }), {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
