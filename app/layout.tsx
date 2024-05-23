@@ -47,7 +47,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <script defer src="https://umami.socialcodelens.com/script.js" data-website-id="a99d6a3d-ff9a-4987-820b-b02c61e940cb"></script>
+        <script
+          defer
+          src="https://umami.stormyfocus.cloud/script.js"
+          data-website-id="dc034555-d4c3-4a53-9c9a-471557540032"
+        ></script>
         <meta property="og:title" content="UniGuesser" />
         <meta
           property="og:description"
