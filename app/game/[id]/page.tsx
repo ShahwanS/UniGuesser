@@ -137,7 +137,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       {/* Map component for making guesses */}
       {/* Map component for making guesses, only visible on non-mobile devices or when toggled */}
       <div
-        className={`absolute bottom-20 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
+        className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
           isMapVisible ? "block" : "hidden"
         } sm:block`}
       >
