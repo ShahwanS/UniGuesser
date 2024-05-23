@@ -15,7 +15,7 @@ export default function Home() {
         priority
       />
       <div className="md:absolute md:inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-10 overflow-y-auto">
-        <div className="bg-white backdrop-blur-lg rounded-2xl shadow-2xl p-6 w-full max-w-6xl space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 max-h-screen overflow-y-auto my-10">
+        <div className="bg-white backdrop-blur-lg rounded-2xl shadow-2xl p-6 w-full max-w-6xl space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 max-h-screen p`y-10">
           <div className="space-y-6 lg:space-y-8 lg:col-span-1">
             <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-700 text-center lg:text-left">
               UniGuesser
