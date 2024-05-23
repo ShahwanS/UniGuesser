@@ -50,7 +50,7 @@ export default function RootLayout({
         <script
           defer
           src="https://umami.stormyfocus.cloud/script.js"
-          data-website-id="dc034555-d4c3-4a53-9c9a-471557540032"
+          data-website-id="dec147df-7995-430d-9353-69c1a029e75c"
         ></script>
         <meta property="og:title" content="UniGuesser" />
         <meta
