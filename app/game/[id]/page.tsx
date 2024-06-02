@@ -1,5 +1,6 @@
 // pages/game/[id].tsx
 "use client"; // This import is required to use the `client` object
+import { Suspense, lazy } from "react";
 
 import React, { useEffect, useState } from "react";
 import Map from "@/app/components/Map";
@@ -9,6 +10,7 @@ import { useLevel } from "@/app/context/LevelContext";
 import { usePlayer } from "@/app/context/PlayerContext";
 
 export const dynamic = "force-dynamic"; // Forces Next.js to treat this page as a dynamic page
+const LazyImage = lazy(() => import("@/app/components/LazyImage"));
 
 const GamePage = ({ params }: { params: { id: string } }) => {
   const {
@@ -119,23 +121,13 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       </div>
       {/* Display the current level's 360° image */}
       {currentImage && (
-        <ReactPannellum
-          key={currentLevel} // Add key to force re-render when level changes
-          id="1"
-          sceneId="firstScene"
-          imageSource={currentImage.image_path}
-          config={{
-            autoLoad: true,
-            showControls: true,
-          }}
-          style={{
-            width: "100vw",
-            height: "100vh",
-          }}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <LazyImage
+            src={currentImage.image_path}
+            currentLevel={currentLevel}
+          />
+        </Suspense>
       )}
-      {/* Map component for making guesses */}
-      {/* Map component for making guesses, only visible on non-mobile devices or when toggled */}
       <div
         className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
           isMapVisible ? "block" : "hidden"
@@ -143,10 +135,9 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       >
         <Map />
       </div>
-      {/* Toggle button for mobile devices */}
       <button
         onClick={toggleMapVisibility}
-        className=" w-full fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-3 rounded-md z-30 sm:hidden text-lg"
+        className="w-full fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-3 rounded-md z-30 sm:hidden text-lg"
       >
         {isMapVisible ? "Hide Map" : "Show Map"}
       </button>
@@ -158,7 +149,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
             <p className="text-lg mb-2">
               Distance to target: {distance?.toFixed(2)} meters
             </p>
-            <p className="text-lg mb-2">score : {levelScore}</p>
+            <p className="text-lg mb-2">Score: {levelScore}</p>
             <div className="w-full bg-gray-300 rounded-full h-6 mb-4">
               <div
                 className="bg-blue-600 h-6 rounded-full"
