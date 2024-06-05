@@ -64,6 +64,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   // Function to advance to the next level
   const nextLevel = () => {
     setCurrentImage(null);
+    toggleMapVisibility();
     setCurrentLevel((prevLevel) => {
       if (prevLevel < images.length - 1) {
         return prevLevel + 1; // Advance to the next level if not the last one
