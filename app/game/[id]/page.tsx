@@ -1,6 +1,6 @@
 // pages/game/[id].tsx
 "use client"; // This import is required to use the `client` object
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useCallback } from "react";
 
 import React, { useEffect, useState } from "react";
 import Map from "@/app/components/Map";
@@ -27,32 +27,27 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const [error, setError] = useState("");
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
+  const fetchImages = useCallback(async () => {
+    try {
+      const response = await fetch("/api/levels", {
+        method: "GET",
+        headers: { "Cache-Control": "no-cache" },
+      });
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      const data = await response.json();
+      setImages(data.images);
+    } catch (error) {
+      console.error("Failed to fetch images:", error);
+      setError("Failed to load images");
+    } finally {
+      setLoading(false);
+    }
+  }, [setImages]);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch("/api/levels", {
-          method: "GET",
-          headers: {
-            "Cache-Control": "no-cache",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setImages(data.images);
-      } catch (error) {
-        console.error("Failed to fetch images:", error);
-        setError("Failed to load images"); // Set error message if fetching fails
-      } finally {
-        setLoading(false); // Set loading to false after fetch attempt
-      }
-    };
-
     fetchImages();
-  }, [setImages]); // Dependency array includes setImages to refetch images if it changes
-
+  }, [fetchImages]);
   if (loading) return <p>Loading...</p>; // Display loading message
   if (error) return <p>Error: {error}</p>; // Display error message
 
