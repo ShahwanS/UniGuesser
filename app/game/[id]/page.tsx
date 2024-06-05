@@ -1,6 +1,6 @@
 // pages/game/[id].tsx
 "use client"; // This import is required to use the `client` object
-import { Suspense, lazy, useCallback } from "react";
+import { Suspense } from "react";
 
 import React, { useEffect, useState } from "react";
 import Map from "@/app/components/Map";
@@ -8,9 +8,6 @@ import Link from "next/link";
 import ReactPannellum from "react-pannellum";
 import { useLevel } from "@/app/context/LevelContext";
 import { usePlayer } from "@/app/context/PlayerContext";
-
-export const dynamic = "force-dynamic"; // Forces Next.js to treat this page as a dynamic page
-const LazyImage = lazy(() => import("@/app/components/LazyImage"));
 
 const GamePage = ({ params }: { params: { id: string } }) => {
   const {
@@ -27,34 +24,46 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const [error, setError] = useState("");
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
-  const fetchImages = useCallback(async () => {
-    try {
-      const response = await fetch("/api/levels", {
-        method: "GET",
-        headers: { "Cache-Control": "no-cache" },
-      });
-      if (!response.ok)
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      const data = await response.json();
-      setImages(data.images);
-    } catch (error) {
-      console.error("Failed to fetch images:", error);
-      setError("Failed to load images");
-    } finally {
-      setLoading(false);
-    }
-  }, [setImages]);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch("/api/levels", {
+          method: "GET",
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setImages(data.images);
+        setCurrentImage(data.images[0].image_path);
+      } catch (error) {
+        console.error("Failed to fetch images:", error);
+        setError("Failed to load images"); // Set error message if fetching fails
+      } finally {
+        setLoading(false); // Set loading to false after fetch attempt
+      }
+    };
+
     fetchImages();
-  }, [fetchImages]);
+  }, [setImages]); // Dependency array includes setImages to refetch images if it changes
+
+  useEffect(() => {
+    if (currentLevel < images.length) {
+      setCurrentImage(images[currentLevel]?.image_path);
+    }
+  }, [currentLevel, images]);
+
   if (loading) return <p>Loading...</p>; // Display loading message
   if (error) return <p>Error: {error}</p>; // Display error message
 
-  const currentImage = images[currentLevel]; // Get the current image based on the current level
-
   // Function to advance to the next level
   const nextLevel = () => {
+    setCurrentImage(null);
     setCurrentLevel((prevLevel) => {
       if (prevLevel < images.length - 1) {
         return prevLevel + 1; // Advance to the next level if not the last one
@@ -117,9 +126,19 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       {/* Display the current level's 360° image */}
       {currentImage && (
         <Suspense fallback={<div>Loading...</div>}>
-          <LazyImage
-            src={currentImage.image_path}
-            currentLevel={currentLevel}
+          <ReactPannellum
+            key={currentLevel}
+            id="1"
+            sceneId="firstScene"
+            imageSource={currentImage}
+            config={{
+              autoLoad: true,
+              showControls: true,
+            }}
+            style={{
+              width: "100vw",
+              height: "100vh",
+            }}
           />
         </Suspense>
       )}
