@@ -1,6 +1,5 @@
-import { createServerClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
-
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 export function createSSRClient(serverComponent = false) {
   return createServerClient(
     process.env.SUPABASE_URL!,
@@ -10,22 +9,20 @@ export function createSSRClient(serverComponent = false) {
         get(name) {
           return cookies().get(name)?.value;
         },
-        set(name,value,options) {
-          if(serverComponent) return;
+        set(name, value, options) {
+          if (serverComponent) return;
 
-          cookies().set(name,value,options);
+          cookies().set(name, value, options);
         },
         remove(name, options): void {
-          if(serverComponent) return;
+          if (serverComponent) return;
 
           cookies().set(name, "", options);
-        }
-      }
+        },
+      },
     }
-  )
+  );
 }
-
-
 
 export function createSupabaseServerComponentClient() {
   return createSSRClient(true);

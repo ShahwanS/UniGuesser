@@ -17,8 +17,6 @@ interface Coordiantes {
 interface GlobalCoordinatesContextType {
   coordinates: Coordiantes;
   setCoordinates: Dispatch<SetStateAction<Coordiantes>>;
-  distance: number | null;
-  setDistance: Dispatch<SetStateAction<number | null>>;
 }
 
 const GlobalCoordinatesContext = createContext<
@@ -42,12 +40,9 @@ export const GlobalCoordinatesProvider = ({
     x: null,
     y: null,
   }); // State for the global coordinates to enable verification of the guesses
-  const [distance, setDistance] = useState<number | null>(null);
 
   return (
-    <GlobalCoordinatesContext.Provider
-      value={{ coordinates, setCoordinates, distance, setDistance }}
-    >
+    <GlobalCoordinatesContext.Provider value={{ coordinates, setCoordinates }}>
       {children}
     </GlobalCoordinatesContext.Provider>
   );
