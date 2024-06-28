@@ -97,13 +97,11 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       </div>
       {/* Display the current level's 360° image */}
       {currentImage && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <ReactPhotoSphereViewer
-            src={currentImage}
-            height={"100vh"}
-            width={"100%"}
-          ></ReactPhotoSphereViewer>
-        </Suspense>
+        <ReactPhotoSphereViewer
+          src={currentImage}
+          height={"100vh"}
+          width={"100%"}
+        ></ReactPhotoSphereViewer>
       )}
       <div
         className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
