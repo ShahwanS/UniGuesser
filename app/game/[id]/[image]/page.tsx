@@ -67,10 +67,6 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
 
   // Function to advance to the next level
   const nextLevel = () => {
-    if (pSRef.current) {
-      pSRef.current.destroy();
-      console.log("destroyed");
-    }
     setCurrentLevel((prevLevel) =>
       prevLevel < images.length - 1 ? prevLevel + 1 : prevLevel
     );
