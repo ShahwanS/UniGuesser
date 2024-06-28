@@ -10,7 +10,6 @@ import dynamic from "next/dynamic";
 import { updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import Image from "next/image";
 const ReactPhotoSphereViewer = dynamic(
   () =>
     import("react-photo-sphere-viewer").then(
@@ -106,12 +105,11 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
       </div>
       {/* Display the current level's 360° image */}
       {image && (
-        <Image
+        <ReactPhotoSphereViewer
           src={image.image_path}
-          alt="degree image"
-          // height={"100vh"}
-          // width={"100%"}
-        />
+          height={"100vh"}
+          width={"100%"}
+        ></ReactPhotoSphereViewer>
       )}
       <div
         className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
