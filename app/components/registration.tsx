@@ -82,7 +82,11 @@ export default function Registration() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Your desired username.." {...field} />
+                <Input
+                  className="text-[16px]"
+                  placeholder="Your desired username.."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
