@@ -79,7 +79,7 @@ export default function Registration() {
         <Button
           type="submit"
           className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md text-white font-semibold text-lg transition-colors disabled:bg-indigo-600 disabled:cursor-not-allowed"
-          disabled={loading}
+          // disabled={loading}
         >
           Start Guessing
         </Button>
