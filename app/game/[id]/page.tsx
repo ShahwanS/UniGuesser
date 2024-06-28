@@ -8,7 +8,7 @@ import { useLevel } from "@/app/context/LevelContext";
 import { usePlayer } from "@/app/context/PlayerContext";
 import dynamic from "next/dynamic";
 import { fetchImages, updateScore } from "@/app/actions";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 // import { ReactPhotoSphereViewer } from 'react-photo-sphere-viewer';
 const ReactPhotoSphereViewer = dynamic(
@@ -22,6 +22,8 @@ const ReactPhotoSphereViewer = dynamic(
 );
 const GamePage = ({ params }: { params: { id: string } }) => {
   const {
+    currentLevel,
+    setCurrentLevel,
     images,
     setImages,
     distance,
@@ -33,7 +35,6 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const [currentLevel, setCurrentLevel] = useState(0);
 
   useEffect(() => {
     if (!username) {

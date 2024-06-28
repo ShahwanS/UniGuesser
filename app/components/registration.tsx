@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { usePlayer } from "../context/PlayerContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,8 +25,8 @@ const formSchema = z.object({
 
 export default function Registration() {
   const router = useRouter(); // Hook to navigate programmatically
-  const { setUsername, setUserID } = usePlayer();
-  const { setImages } = useLevel();
+  const { setUsername, setUserID, setScore } = usePlayer();
+  const { setImages, setCurrentLevel } = useLevel();
 
   // Define form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,6 +48,8 @@ export default function Registration() {
       const user = result.data[0];
       setUsername(user.username); // Set the username in the context
       setUserID(user.id); // Set the user ID in the context
+      setCurrentLevel(0); // Set the current level to 0
+      setScore(0); // Set the score to 0
       if (images && images.data) {
         setImages(images.data); // Set the images in the context
         toast.success("User registered successfully!"); // Show a success message
