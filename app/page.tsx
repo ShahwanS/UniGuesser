@@ -11,7 +11,6 @@ export default function Home() {
         alt="University building"
         layout="fill"
         className="opacity-50 z-0 object-cover "
-        priority
       />
       <div className="md:absolute md:inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-10 overflow-y-auto">
         <div className="bg-white backdrop-blur-lg rounded-2xl shadow-2xl p-6 w-full max-w-6xl space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6  py-10 h-full">

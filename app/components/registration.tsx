@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { usePlayer } from "../context/PlayerContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { set, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { Button } from "@/app/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/components/ui/form";
+import { Input } from "@/app/components/ui/input";
 import { registerUser, fetchImages } from "@/app/actions";
 import toast from "react-hot-toast";
 import { useLevel } from "../context/LevelContext";
@@ -27,7 +27,7 @@ const formSchema = z.object({
 export default function Registration() {
   const router = useRouter(); // Hook to navigate programmatically
   const { setUsername, setUserID, setScore } = usePlayer();
-  const { setImages, setCurrentLevel, images } = useLevel();
+  const { setImages, setCurrentLevel } = useLevel();
 
   useEffect(() => {
     const loadImages = async () => {
@@ -54,21 +54,15 @@ export default function Registration() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await registerUser(values.username);
     const images = await fetchImages();
-    if (result.error) {
-      toast.error(result.error); // Set the error message
-    } else if (result.data) {
+    if (result.data && images.data) {
       const user = result.data[0];
       setUsername(user.username); // Set the username in the context
       setUserID(user.id); // Set the user ID in the context
       setCurrentLevel(0); // Set the current level to 0
       setScore(0); // Set the score to 0
-      if (images && images.data) {
-        setImages(images.data); // Set the images in the context
-        toast.success("User registered successfully!"); // Show a success message
-        router.push(`/game/${user.id}`); // Navigate to the game page
-      } else {
-        toast.error("Failed to load images."); // Error handling for images
-      }
+      setImages(images.data); // Set the images in the context
+      toast.success("User registered successfully!"); // Show a success message
+      router.push(`/game/${user.id}`); // Navigate to the game page
     }
   }
 
