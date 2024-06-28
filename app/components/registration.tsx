@@ -15,8 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import registerUser from "@/app/actions";
+import { registerUser, fetchImages } from "@/app/actions";
 import toast from "react-hot-toast";
+import { useLevel } from "../context/LevelContext";
+
 const formSchema = z.object({
   username: z.string().min(2).max(50),
 });
@@ -24,27 +26,35 @@ const formSchema = z.object({
 export default function Registration() {
   const router = useRouter(); // Hook to navigate programmatically
   const { setUsername, setUserID } = usePlayer();
+  const { setImages } = useLevel();
 
-  //  Define  form.
+  // Define form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
     },
   });
+
   const { isSubmitting, isValid } = form.formState;
   const loading = isSubmitting || !isValid;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await registerUser(values.username);
+    const images = await fetchImages();
     if (result.error) {
       toast.error(result.error); // Set the error message
     } else if (result.data) {
       const user = result.data[0];
       setUsername(user.username); // Set the username in the context
       setUserID(user.id); // Set the user ID in the context
-      toast.success("User registered successfully!"); // Show a success message
-      router.push(`/game/${user.id}`); // Navigate to the game page
+      if (images && images.data) {
+        setImages(images.data); // Set the images in the context
+        toast.success("User registered successfully!"); // Show a success message
+        router.push(`/game/${user.id}`); // Navigate to the game page
+      } else {
+        toast.error("Failed to load images."); // Error handling for images
+      }
     }
   }
 

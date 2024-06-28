@@ -36,37 +36,39 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const [error, setError] = useState("");
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string | null>(
+    images[0]?.image_path
+  );
   const pathname = usePathname();
   const searchParams = new URLSearchParams();
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch("/api/levels", {
-          method: "GET",
-          headers: {
-            "Cache-Control": "force-cache",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setImages(data.images);
-        setCurrentImage(data.images[0].image_path);
+  // useEffect(() => {
+  //   const fetchImages = async () => {
+  //     try {
+  //       const response = await fetch("/api/levels", {
+  //         method: "GET",
+  //         headers: {
+  //           "Cache-Control": "force-cache",
+  //         },
+  //       });
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+  //       const data = await response.json();
+  //       setImages(data.images);
+  //       setCurrentImage(data.images[0].image_path);
 
-        //setting image path to query param
-      } catch (error) {
-        console.error("Failed to fetch images:", error);
-        setError("Failed to load images"); // Set error message if fetching fails
-      } finally {
-        setLoading(false); // Set loading to false after fetch attempt
-      }
-    };
+  //       //setting image path to query param
+  //     } catch (error) {
+  //       console.error("Failed to fetch images:", error);
+  //       setError("Failed to load images"); // Set error message if fetching fails
+  //     } finally {
+  //       setLoading(false); // Set loading to false after fetch attempt
+  //     }
+  //   };
 
-    fetchImages();
-  }, [setImages]); // Dependency array includes setImages to refetch images if it changes
+  //   fetchImages();
+  // }, [setImages]); // Dependency array includes setImages to refetch images if it changes
 
   useEffect(() => {
     if (currentLevel < images.length) {
@@ -74,8 +76,8 @@ const GamePage = ({ params }: { params: { id: string } }) => {
     }
   }, [currentLevel, images]);
 
-  if (loading) return <p>Loading...</p>; // Display loading message
-  if (error) return <p>Error: {error}</p>; // Display error message
+  // if (loading) return <p>Loading...</p>; // Display loading message
+  // if (error) return <p>Error: {error}</p>; // Display error message
 
   // Function to advance to the next level
   const nextLevel = () => {
