@@ -1,16 +1,15 @@
 // pages/game/[id].tsx
 "use client"; // This import is required to use the `client` object
-import { Suspense } from "react";
 
 import React, { useEffect, useState } from "react";
 import Map from "@/app/components/Map";
 import Link from "next/link";
-import ReactPannellum from "react-pannellum";
 import { useLevel } from "@/app/context/LevelContext";
 import { usePlayer } from "@/app/context/PlayerContext";
-import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
-
+import { fetchImages, updateScore } from "@/app/actions";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 // import { ReactPhotoSphereViewer } from 'react-photo-sphere-viewer';
 const ReactPhotoSphereViewer = dynamic(
   () =>
@@ -23,106 +22,60 @@ const ReactPhotoSphereViewer = dynamic(
 );
 const GamePage = ({ params }: { params: { id: string } }) => {
   const {
-    currentLevel,
     images,
     setImages,
     distance,
-    setCurrentLevel,
     levelCompleted,
     setLevelCompleted,
     levelScore,
-  } = useLevel(); // Use the game context to manage state
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  } = useLevel();
+  const router = useRouter();
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
-  const [currentImage, setCurrentImage] = useState<string | null>(
-    images[0]?.image_path
-  );
-  const pathname = usePathname();
-  const searchParams = new URLSearchParams();
-
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     try {
-  //       const response = await fetch("/api/levels", {
-  //         method: "GET",
-  //         headers: {
-  //           "Cache-Control": "force-cache",
-  //         },
-  //       });
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setImages(data.images);
-  //       setCurrentImage(data.images[0].image_path);
-
-  //       //setting image path to query param
-  //     } catch (error) {
-  //       console.error("Failed to fetch images:", error);
-  //       setError("Failed to load images"); // Set error message if fetching fails
-  //     } finally {
-  //       setLoading(false); // Set loading to false after fetch attempt
-  //     }
-  //   };
-
-  //   fetchImages();
-  // }, [setImages]); // Dependency array includes setImages to refetch images if it changes
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentLevel, setCurrentLevel] = useState(0);
 
   useEffect(() => {
-    if (currentLevel < images.length) {
-      setCurrentImage(images[currentLevel]?.image_path);
+    if (!username) {
+      router.push("/");
     }
-  }, [currentLevel, images]);
+    const loadImages = async () => {
+      const fetchedImages = await fetchImages();
+      console.log(fetchedImages);
+      if (fetchedImages && fetchedImages.data) {
+        setImages(fetchedImages.data);
+        setCurrentImage(fetchedImages.data[0].image_path);
+      }
+    };
+    loadImages();
+  }, [router, setImages, username]);
 
-  // if (loading) return <p>Loading...</p>; // Display loading message
-  // if (error) return <p>Error: {error}</p>; // Display error message
+  useEffect(() => {
+    setCurrentImage(images[currentLevel]?.image_path);
+  }, [currentLevel, images]);
 
   // Function to advance to the next level
   const nextLevel = () => {
+    setCurrentLevel((prevLevel) =>
+      prevLevel < images.length - 1 ? prevLevel + 1 : prevLevel
+    );
     setCurrentImage(null);
     toggleMapVisibility();
-    setCurrentLevel((prevLevel) => {
-      if (prevLevel < images.length - 1) {
-        return prevLevel + 1; // Advance to the next level if not the last one
-      }
-      return prevLevel; // Stay on the current level if it is the last one
-    });
-    setLevelCompleted(false); // Reset the level completion status
+    setLevelCompleted(false);
   };
 
   const handleGameEnd = async () => {
-    try {
-      const response = await fetch("/api/sendScore", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userID: params.id,
-          username: username,
-          score: score,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to update score");
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
+    const result = await updateScore({
+      userId: params.id,
+      score: score,
+      username: username,
+    });
+    if (result.error) {
+      toast.error("Error updating score:" + result.error);
+      return;
     }
-
-    // Redirect to the leaderboard page after updating the score
-    window.location.href = "/";
+    router.push("/");
   };
-
-  // If the username is not set, redirect to homepage
-  if (!username) {
-    window.location.href = "/";
-  }
 
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);

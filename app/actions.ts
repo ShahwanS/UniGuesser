@@ -45,5 +45,26 @@ export async function fetchImages() {
 }
 
 
+type updateScoreProps = {
+  userId: string;
+  score: number;
+  username: string | null;
+};
 
 //score updating
+const updateScore = async ({ userId, score, username }: updateScoreProps) => {
+  const client = createSSRClient();
+  try {
+    const { data, error } = await client.from('users').update({ score }).match({ id: userId }).match({ username }).select();
+      if (error) {
+          console.error('Database update error:', error);
+          return { error: error.message };
+      }
+      return { data };
+  } catch (err) {
+      console.error('Unexpected error:', err);
+      return { error: 'Unexpected error occurred. Please try again.' };
+  }
+}
+
+export { updateScore };

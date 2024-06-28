@@ -9,9 +9,7 @@ interface ImageData {
 }
 
 interface LevelState {
-  currentLevel: number; // Current level of the Level
   images: ImageData[];
-  setCurrentLevel: React.Dispatch<React.SetStateAction<number>>; // Function to set the current level
   setImages: React.Dispatch<React.SetStateAction<ImageData[]>>; // Function to set the images array
   distance: number | null;
   setDistance: React.Dispatch<React.SetStateAction<number | null>>;
@@ -26,7 +24,6 @@ const LevelContext = createContext<LevelState | undefined>(undefined);
 export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [currentLevel, setCurrentLevel] = useState(0); // State for the current level
   const [images, setImages] = useState<ImageData[]>([]); // State for the images array
   const [distance, setDistance] = useState<number | null>(null);
   const [levelCompleted, setLevelCompleted] = useState(false);
@@ -35,9 +32,7 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <LevelContext.Provider
       value={{
-        currentLevel,
         images,
-        setCurrentLevel,
         setImages,
         distance,
         setDistance,
