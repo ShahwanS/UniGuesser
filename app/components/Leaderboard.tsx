@@ -1,9 +1,5 @@
 import React from "react";
 import { createSupabaseServerComponentClient } from "@/app/utils/supabaseServer";
-interface UserScore {
-  username: string;
-  score: number;
-}
 
 const Leaderboard: React.FC = async () => {
   const supabase = createSupabaseServerComponentClient();
