@@ -33,22 +33,27 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string | null>(
+    images[0]?.image_path
+  );
 
-  useEffect(() => {
-    if (!username) {
-      router.push("/");
-    }
-    const loadImages = async () => {
-      const fetchedImages = await fetchImages();
-      console.log(fetchedImages);
-      if (fetchedImages && fetchedImages.data) {
-        setImages(fetchedImages.data);
-        setCurrentImage(fetchedImages.data[0].image_path);
-      }
-    };
-    loadImages();
-  }, [router, setImages, username]);
+  if (!username) {
+    router.push("/");
+  }
+
+  // useEffect(() => {
+  //   if (!username) {
+  //     router.push("/");
+  //   }
+  //   const loadImages = async () => {
+  //     const fetchedImages = await fetchImages();
+  //     console.log(fetchedImages);
+  //     if (fetchedImages && fetchedImages.data) {
+  //       setImages(fetchedImages.data);
+  //     }
+  //   };
+  //   loadImages();
+  // }, [router, setImages, username]);
 
   useEffect(() => {
     setCurrentImage(images[currentLevel]?.image_path);

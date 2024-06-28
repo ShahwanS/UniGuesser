@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { registerUser, fetchImages } from "@/app/actions";
 import toast from "react-hot-toast";
 import { useLevel } from "../context/LevelContext";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -26,7 +27,18 @@ const formSchema = z.object({
 export default function Registration() {
   const router = useRouter(); // Hook to navigate programmatically
   const { setUsername, setUserID, setScore } = usePlayer();
-  const { setImages, setCurrentLevel } = useLevel();
+  const { setImages, setCurrentLevel, images } = useLevel();
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const fetchedImages = await fetchImages();
+      console.log(fetchedImages);
+      if (fetchedImages && fetchedImages.data) {
+        setImages(fetchedImages.data);
+      }
+    };
+    loadImages();
+  }, [router, setImages]);
 
   // Define form.
   const form = useForm<z.infer<typeof formSchema>>({
