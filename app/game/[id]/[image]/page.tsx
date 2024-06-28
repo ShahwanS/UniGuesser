@@ -1,13 +1,13 @@
 // pages/game/[id].tsx
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Map from "@/app/components/Map";
 import Link from "next/link";
 import { useLevel } from "@/app/context/LevelContext";
 import { usePlayer } from "@/app/context/PlayerContext";
 import dynamic from "next/dynamic";
-import { fetchImages, updateScore } from "@/app/actions";
+import { updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 const ReactPhotoSphereViewer = dynamic(
@@ -19,12 +19,11 @@ const ReactPhotoSphereViewer = dynamic(
     ssr: false,
   }
 );
-const GamePage = ({ params }: { params: { id: string } }) => {
+const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   const {
     currentLevel,
     setCurrentLevel,
     images,
-    setImages,
     distance,
     levelCompleted,
     setLevelCompleted,
@@ -36,6 +35,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const [currentImage, setCurrentImage] = useState<string | null>(
     images[0]?.image_path
   );
+  const image = images.find((img) => img.x_coord === parseInt(params.image));
 
   if (!username) {
     router.push("/");
@@ -56,18 +56,20 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   // }, [router, setImages, username]);
 
   useEffect(() => {
-    setCurrentImage(images[currentLevel]?.image_path);
-  }, [currentLevel, images]);
+    // setCurrentImage(images[currentLevel]?.image_path);
+    //get the image-x-coordinates from the url with params.image and find the image path that matches
+
+    router.push(`/game/${params.id}/${images[currentLevel]?.x_coord}`);
+  }, [currentLevel, images, params.id, router]);
 
   // Function to advance to the next level
   const nextLevel = () => {
     setCurrentLevel((prevLevel) =>
       prevLevel < images.length - 1 ? prevLevel + 1 : prevLevel
     );
-    setCurrentImage(null);
+    // setCurrentImage(null);
     toggleMapVisibility();
     setLevelCompleted(false);
-    router.refresh();
   };
 
   const handleGameEnd = async () => {
@@ -102,9 +104,9 @@ const GamePage = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       {/* Display the current level's 360° image */}
-      {currentImage && (
+      {image && (
         <ReactPhotoSphereViewer
-          src={currentImage}
+          src={image.image_path}
           height={"100vh"}
           width={"100%"}
         ></ReactPhotoSphereViewer>

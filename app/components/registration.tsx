@@ -27,7 +27,7 @@ const formSchema = z.object({
 export default function Registration() {
   const router = useRouter(); // Hook to navigate programmatically
   const { setUsername, setUserID, setScore } = usePlayer();
-  const { setImages, setCurrentLevel } = useLevel();
+  const { setImages, setCurrentLevel, images, currentLevel } = useLevel();
 
   useEffect(() => {
     const loadImages = async () => {
@@ -53,16 +53,16 @@ export default function Registration() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await registerUser(values.username);
-    const images = await fetchImages();
-    if (result.data && images.data) {
+    const fetchedImages = await fetchImages();
+    if (result.data && fetchedImages.data) {
       const user = result.data[0];
       setUsername(user.username); // Set the username in the context
       setUserID(user.id); // Set the user ID in the context
       setCurrentLevel(0); // Set the current level to 0
       setScore(0); // Set the score to 0
-      setImages(images.data); // Set the images in the context
+      setImages(fetchedImages.data); // Set the images in the context
       toast.success("User registered successfully!"); // Show a success message
-      router.push(`/game/${user.id}`); // Navigate to the game page
+      router.push(`/game/${user.id}/${images[currentLevel].x_coord}`); // Navigate to the game page
     }
   }
 
