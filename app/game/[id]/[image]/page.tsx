@@ -11,15 +11,17 @@ import { updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ViewerAPI } from "react-photo-sphere-viewer";
-const ReactPhotoSphereViewer = dynamic(
-  () =>
-    import("react-photo-sphere-viewer").then(
-      (mod) => mod.ReactPhotoSphereViewer
-    ),
-  {
-    ssr: false,
-  }
-);
+import { ReactPhotoSphereViewer } from "react-photo-sphere-viewer";
+
+// const ReactPhotoSphereViewer = dynamic(
+//   () =>
+//     import("react-photo-sphere-viewer").then(
+//       (mod) => mod.ReactPhotoSphereViewer
+//     ),
+//   {
+//     ssr: false,
+//   }
+// );
 const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   const {
     currentLevel,
@@ -33,29 +35,15 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   const router = useRouter();
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
-  const [currentImage, setCurrentImage] = useState<string | null>(
-    images[0]?.image_path
-  );
+  // const [currentImage, setCurrentImage] = useState<string | null>(
+  //   images[0]?.image_path
+  // );
   const image = images.find((img) => img.x_coord === parseInt(params.image));
   const pSRef = useRef<ViewerAPI | null>(null);
 
   if (!username) {
     router.push("/");
   }
-
-  // useEffect(() => {
-  //   if (!username) {
-  //     router.push("/");
-  //   }
-  //   const loadImages = async () => {
-  //     const fetchedImages = await fetchImages();
-  //     console.log(fetchedImages);
-  //     if (fetchedImages && fetchedImages.data) {
-  //       setImages(fetchedImages.data);
-  //     }
-  //   };
-  //   loadImages();
-  // }, [router, setImages, username]);
 
   useEffect(() => {
     // setCurrentImage(images[currentLevel]?.image_path);
@@ -67,8 +55,9 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   useEffect(() => {
     if (pSRef.current) {
       pSRef.current.destroy();
+      console.log("destroyed");
     }
-  }, [image]);
+  }, [currentLevel]);
 
   // Function to advance to the next level
   const nextLevel = () => {
@@ -96,7 +85,6 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
   };
-
   return (
     <div className="relative w-full h-screen flex justify-center items-center">
       <div className="absolute top-0 right-0 z-10 p-10 space-y-4">
