@@ -8,7 +8,19 @@ import Link from "next/link";
 import ReactPannellum from "react-pannellum";
 import { useLevel } from "@/app/context/LevelContext";
 import { usePlayer } from "@/app/context/PlayerContext";
+import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 
+// import { ReactPhotoSphereViewer } from 'react-photo-sphere-viewer';
+const ReactPhotoSphereViewer = dynamic(
+  () =>
+    import("react-photo-sphere-viewer").then(
+      (mod) => mod.ReactPhotoSphereViewer
+    ),
+  {
+    ssr: false,
+  }
+);
 const GamePage = ({ params }: { params: { id: string } }) => {
   const {
     currentLevel,
@@ -25,6 +37,8 @@ const GamePage = ({ params }: { params: { id: string } }) => {
   const { score, username } = usePlayer();
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const pathname = usePathname();
+  const searchParams = new URLSearchParams();
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -32,7 +46,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
         const response = await fetch("/api/levels", {
           method: "GET",
           headers: {
-            "Cache-Control": "no-cache",
+            "Cache-Control": "force-cache",
           },
         });
         if (!response.ok) {
@@ -41,6 +55,8 @@ const GamePage = ({ params }: { params: { id: string } }) => {
         const data = await response.json();
         setImages(data.images);
         setCurrentImage(data.images[0].image_path);
+
+        //setting image path to query param
       } catch (error) {
         console.error("Failed to fetch images:", error);
         setError("Failed to load images"); // Set error message if fetching fails
@@ -126,22 +142,11 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       </div>
       {/* Display the current level's 360° image */}
       {currentImage && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <ReactPannellum
-            key={currentLevel}
-            id="1"
-            sceneId="firstScene"
-            imageSource={currentImage}
-            config={{
-              autoLoad: true,
-              showControls: true,
-            }}
-            style={{
-              width: "100vw",
-              height: "100vh",
-            }}
-          />
-        </Suspense>
+        <ReactPhotoSphereViewer
+          src={currentImage}
+          height={"100vh"}
+          width={"100%"}
+        ></ReactPhotoSphereViewer>
       )}
       <div
         className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${

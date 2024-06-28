@@ -4,6 +4,8 @@ import "./globals.css";
 import Script from "next/script";
 import { LevelProvider } from "./context/LevelContext";
 import { PlayerProvider } from "./context/PlayerContext";
+import { ToastProvider } from "@/app/components/providers/ToastProvider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -82,6 +84,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <LevelProvider>
           <PlayerProvider>
+            <ToastProvider />
             <main>{children}</main>
             <Script src="https://cdn.pannellum.org/2.5/pannellum.js"></Script>
           </PlayerProvider>
