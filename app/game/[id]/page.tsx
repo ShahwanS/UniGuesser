@@ -67,6 +67,7 @@ const GamePage = ({ params }: { params: { id: string } }) => {
     setCurrentImage(null);
     toggleMapVisibility();
     setLevelCompleted(false);
+    router.refresh();
   };
 
   const handleGameEnd = async () => {
