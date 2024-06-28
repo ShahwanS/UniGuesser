@@ -1,7 +1,7 @@
 // pages/game/[id].tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Map from "@/app/components/Map";
 import Link from "next/link";
 import { useLevel } from "@/app/context/LevelContext";
@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import { updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { ViewerAPI } from "react-photo-sphere-viewer";
 const ReactPhotoSphereViewer = dynamic(
   () =>
     import("react-photo-sphere-viewer").then(
@@ -36,6 +37,7 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
     images[0]?.image_path
   );
   const image = images.find((img) => img.x_coord === parseInt(params.image));
+  const pSRef = useRef<ViewerAPI | null>(null);
 
   if (!username) {
     router.push("/");
@@ -61,6 +63,12 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
 
     router.push(`/game/${params.id}/${images[currentLevel]?.x_coord}`);
   }, [currentLevel, images, params.id, router]);
+
+  useEffect(() => {
+    if (pSRef.current) {
+      pSRef.current.destroy();
+    }
+  }, [image]);
 
   // Function to advance to the next level
   const nextLevel = () => {
@@ -106,6 +114,7 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
       {/* Display the current level's 360° image */}
       {image && (
         <ReactPhotoSphereViewer
+          ref={pSRef}
           src={image.image_path}
           height={"100vh"}
           width={"100%"}
