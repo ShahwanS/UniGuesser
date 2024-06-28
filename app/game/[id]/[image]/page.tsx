@@ -11,17 +11,15 @@ import { updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ViewerAPI } from "react-photo-sphere-viewer";
-import { ReactPhotoSphereViewer } from "react-photo-sphere-viewer";
-
-// const ReactPhotoSphereViewer = dynamic(
-//   () =>
-//     import("react-photo-sphere-viewer").then(
-//       (mod) => mod.ReactPhotoSphereViewer
-//     ),
-//   {
-//     ssr: false,
-//   }
-// );
+const ReactPhotoSphereViewer = dynamic(
+  () =>
+    import("react-photo-sphere-viewer").then(
+      (mod) => mod.ReactPhotoSphereViewer
+    ),
+  {
+    ssr: false,
+  }
+);
 const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   const {
     currentLevel,
@@ -85,6 +83,7 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
   };
+
   return (
     <div className="relative w-full h-screen flex justify-center items-center">
       <div className="absolute top-0 right-0 z-10 p-10 space-y-4">
