@@ -11,7 +11,7 @@ import { updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ViewerAPI } from "react-photo-sphere-viewer";
-
+import { ReactPhotoSphereViewer } from "react-photo-sphere-viewer";
 // const DynamicReactPhotoSphereViewer = dynamic(
 //   () =>
 //     import("react-photo-sphere-viewer").then(
@@ -27,8 +27,6 @@ import { ViewerAPI } from "react-photo-sphere-viewer";
 // ));
 
 // ReactPhotoSphereViewer.displayName = "ReactPhotoSphereViewer";
-import { ReactPhotoSphereViewer } from "react-photo-sphere-viewer";
-
 // const ReactPhotoSphereViewer = dynamic(
 //   () =>
 //     import("react-photo-sphere-viewer").then(
@@ -64,19 +62,15 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
   useEffect(() => {
     // setCurrentImage(images[currentLevel]?.image_path);
     //get the image-x-coordinates from the url with params.image and find the image path that matches
-    console.log(pSRef.current);
-
     router.push(`/game/${params.id}/${images[currentLevel]?.x_coord}`);
   }, [currentLevel, images, params.id, router]);
 
   // Function to advance to the next level
   const nextLevel = () => {
-    console.log(pSRef.current);
-
-    // if (pSRef.current) {
-    //   pSRef.current.destroy();
-    //   console.log("destroyed");
-    // }
+    if (pSRef.current) {
+      pSRef.current.destroy();
+      console.log("destroyed");
+    }
     setCurrentLevel((prevLevel) =>
       prevLevel < images.length - 1 ? prevLevel + 1 : prevLevel
     );
@@ -119,12 +113,12 @@ const GamePage = ({ params }: { params: { id: string; image: string } }) => {
       {/* Display the current level's 360° image */}
       {image && (
         <ReactPhotoSphereViewer
-          key={image ? image.x_coord : "default-key"}
+          key={params.image}
           ref={pSRef}
           src={image.image_path}
           height={"100vh"}
           width={"100%"}
-        ></ReactPhotoSphereViewer>
+        />
       )}
       <div
         className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
