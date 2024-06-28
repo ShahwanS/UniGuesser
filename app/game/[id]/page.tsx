@@ -1,7 +1,7 @@
 // pages/game/[id].tsx
-"use client"; // This import is required to use the `client` object
+"use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Map from "@/app/components/Map";
 import Link from "next/link";
 import { useLevel } from "@/app/context/LevelContext";
@@ -10,7 +10,6 @@ import dynamic from "next/dynamic";
 import { fetchImages, updateScore } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-// import { ReactPhotoSphereViewer } from 'react-photo-sphere-viewer';
 const ReactPhotoSphereViewer = dynamic(
   () =>
     import("react-photo-sphere-viewer").then(
@@ -98,11 +97,13 @@ const GamePage = ({ params }: { params: { id: string } }) => {
       </div>
       {/* Display the current level's 360° image */}
       {currentImage && (
-        <ReactPhotoSphereViewer
-          src={currentImage}
-          height={"100vh"}
-          width={"100%"}
-        ></ReactPhotoSphereViewer>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ReactPhotoSphereViewer
+            src={currentImage}
+            height={"100vh"}
+            width={"100%"}
+          ></ReactPhotoSphereViewer>
+        </Suspense>
       )}
       <div
         className={`absolute bottom-50 md:bottom-10 right-10 w-[350px] h-[350px] sm:w-[250px] sm:h-[250px] md:w-[350px] md:h-[350px] sm:hover:w-[600px] sm:hover:h-[600px] z-20 transition-all duration-300 ease-in-out ${
