@@ -10,8 +10,7 @@ export default function Home() {
         src={mainImage}
         alt="University building"
         layout="fill"
-        objectFit="cover"
-        className="opacity-50 z-0"
+        className="opacity-50 z-0 object-cover "
         priority
       />
       <div className="md:absolute md:inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-10 overflow-y-auto">
