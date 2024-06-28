@@ -61,12 +61,15 @@ const GamePage = ({ params }: { params: { id: string } }) => {
 
   // Function to advance to the next level
   const nextLevel = () => {
-    setCurrentLevel((prevLevel) =>
-      prevLevel < images.length - 1 ? prevLevel + 1 : prevLevel
-    );
-    setCurrentImage(null);
-    toggleMapVisibility();
-    setLevelCompleted(false);
+    setCurrentImage(null); // Clear current image first
+    setTimeout(() => {
+      setCurrentLevel((prevLevel) =>
+        prevLevel < images.length - 1 ? prevLevel + 1 : prevLevel
+      );
+      setCurrentImage(null);
+      toggleMapVisibility();
+      setLevelCompleted(false);
+    }, 10);
     router.refresh();
   };
 
