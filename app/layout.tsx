@@ -80,11 +80,6 @@ export default function RootLayout({
           content="https://www.uniguesser.com/twitter-image.jpg"
         />
         <meta name="twitter:image:alt" content="UniGuesser" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
       </head>
       <body className={inter.className}>
         <LevelProvider>
