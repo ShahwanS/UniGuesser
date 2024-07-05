@@ -21,7 +21,7 @@ import { useLevel } from "../context/LevelContext";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-  username: z.string().optional(),
+  username: z.string()
 });
 
 export default function Registration() {
@@ -44,7 +44,7 @@ export default function Registration() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      username: "user",
     },
   });
 
