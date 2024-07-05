@@ -49,7 +49,7 @@ export default function Registration() {
   });
 
   const { isSubmitting, isValid } = form.formState;
-  const loading = isSubmitting || !isValid;
+  const loading = isSubmitting;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await registerUser(values.username);
