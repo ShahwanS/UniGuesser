@@ -21,7 +21,7 @@ import { useLevel } from "../context/LevelContext";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-  username: z.string(),
+
 });
 
 export default function Registration() {
@@ -49,7 +49,7 @@ export default function Registration() {
   });
 
   const { isSubmitting, isValid } = form.formState;
-  const loading = isSubmitting;
+  const loading = isSubmitting || !isValid;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = await registerUser(values.username);
