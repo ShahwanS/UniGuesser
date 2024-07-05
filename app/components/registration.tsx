@@ -21,7 +21,7 @@ import { useLevel } from "../context/LevelContext";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-
+  username: z.string().optional(),
 });
 
 export default function Registration() {
