@@ -29,13 +29,16 @@ export default function Registration() {
   const { setUsername, setUserID, setScore } = usePlayer();
   const { setImages, setCurrentLevel, images, currentLevel } = useLevel();
 
-  const loadImages = async () => {
-    const fetchedImages = await fetchImages();
-    console.log(fetchedImages);
-    if (fetchedImages && fetchedImages.data) {
-      setImages(fetchedImages.data);
-    }
-  };
+  useEffect(() => {
+    const loadImages = async () => {
+      const fetchedImages = await fetchImages();
+      console.log(fetchedImages);
+      if (fetchedImages && fetchedImages.data) {
+        setImages(fetchedImages.data);
+      }
+    };
+    loadImages();
+  }, [router, setImages]);
 
   // Define form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,8 +52,6 @@ export default function Registration() {
   const loading = isSubmitting || !isValid;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    loadImages();
-
     const username =
       values.username ??
       "Anonymous" + Math.floor(Math.random() * 1000).toString();
