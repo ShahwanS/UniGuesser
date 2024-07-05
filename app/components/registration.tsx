@@ -44,7 +44,7 @@ export default function Registration() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "user",
+      username: "",
     },
   });
 
