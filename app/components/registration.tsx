@@ -21,7 +21,7 @@ import { useLevel } from "../context/LevelContext";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-  username: z.string().optional(),
+  username: z.string(),
 });
 
 export default function Registration() {
@@ -52,11 +52,7 @@ export default function Registration() {
   const loading = isSubmitting || !isValid;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    //username is either the typed username or a random number
-    const username =
-      values.username ||
-      "user" + Math.floor(Math.random() * 1000000).toString();
-    const result = await registerUser(username);
+    const result = await registerUser(values.username);
     const fetchedImages = await fetchImages();
     if (result.data && fetchedImages.data) {
       const user = result.data[0];
