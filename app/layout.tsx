@@ -49,11 +49,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          defer
-          src="https://umami.stormyfocus.cloud/script.js"
-          data-website-id="dec147df-7995-430d-9353-69c1a029e75c"
-        ></script>
         <meta property="og:title" content="UniGuesser" />
         <meta
           property="og:description"
@@ -86,7 +81,6 @@ export default function RootLayout({
           <PlayerProvider>
             <ToastProvider />
             <main>{children}</main>
-            <Script src="https://cdn.pannellum.org/2.5/pannellum.js"></Script>
           </PlayerProvider>
         </LevelProvider>
       </body>
