@@ -83,6 +83,11 @@ export default function RootLayout({
             <main>{children}</main>
           </PlayerProvider>
         </LevelProvider>
+        <Script
+        async
+        src={process.env.UMAMI_SCRIPT_URL}
+        data-website-id={process.env.UMAMI_DATA_WEBSITE_ID}
+      />
       </body>
     </html>
   );
